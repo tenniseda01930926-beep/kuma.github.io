@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>灯屋 あかりや</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@500;700&display=swap">
+<style>
+  :root{
+    --bg:#191410;
+    --panel:#221b14;
+    --panel-2:#2b2219;
+    --panel-3:#352b1f;
+    --border:#40331f;
+    --text:#f4ead9;
+    --muted:#bba98a;
+    --muted-2:#8a7a5f;
+    --accent:#e8a33d;
+    --accent-ink:#2a1a06;
+    --seal:#b8402a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    background:
+      radial-gradient(ellipse 620px 420px at 18% -8%, rgba(232,163,61,.14), transparent 60%),
+      radial-gradient(ellipse 520px 380px at 100% 10%, rgba(184,64,42,.10), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Zen Kaku Gothic New','Hiragino Kaku Gothic ProN',sans-serif;
+    padding-inline:18px;
+    padding-block:0;
+  }
+  .mincho{font-family:'Shippori Mincho',serif;}
+  h1,h2,h3{text-wrap:balance;margin:0;}
+  a{color:inherit;}
+
+  .tag{
+    max-width:920px;margin:20px auto 0;
+    display:flex;align-items:center;gap:10px;
+    color:var(--muted-2);font-size:12px;letter-spacing:.06em;
+    padding-bottom:14px;border-bottom:1px dashed var(--border);
+  }
+  .tag .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none;}
+  .tag b{color:var(--text);}
+
+  .wrap{max-width:920px;margin-inline:auto;padding-block:44px 60px;}
+
+  /* hero */
+  .hero{
+    display:flex;flex-direction:column;gap:22px;
+    padding-block:20px 40px;
+    border-bottom:1px solid var(--border);
+    margin-bottom:44px;
+  }
+  .hero .kicker{
+    font-size:12px;letter-spacing:.28em;color:var(--accent);font-weight:700;
+  }
+  .hero h1{
+    font-size:clamp(34px,7vw,58px);
+    font-weight:800;
+    line-height:1.25;
+  }
+  .hero h1 em{font-style:normal;color:var(--accent);}
+  .hero p.lead{color:var(--muted);font-size:15px;max-width:46ch;line-height:1.9;}
+  .hero-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:6px;}
+  .cta{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--accent);color:var(--accent-ink);
+    font-weight:800;font-size:14px;
+    padding:13px 22px;border-radius:999px;
+    text-decoration:none;
+  }
+  .hours-pill{
+    font-size:12px;color:var(--muted);
+    display:flex;align-items:center;gap:8px;
+  }
+  .hours-pill .mono{font-family:'IBM Plex Mono',monospace;color:var(--text);}
+
+  /* concept */
+  .concept{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+    margin-bottom:56px;
+  }
+  @media (max-width:640px){.concept{grid-template-columns:1fr;}}
+  .concept-card{
+    background:var(--panel);border:1px solid var(--border);
+    border-radius:16px;padding:22px 20px;
+  }
+  .concept-card .num{font-family:'IBM Plex Mono',monospace;color:var(--accent);font-size:12px;letter-spacing:.1em;}
+  .concept-card h3{font-size:17px;margin:10px 0 8px;}
+  .concept-card p{color:var(--muted);font-size:13px;line-height:1.8;margin:0;}
+
+  /* menu */
+  .section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap;}
+  .section-head h2{font-size:24px;font-weight:800;}
+  .section-head .note{color:var(--muted-2);font-size:12px;}
+
+  .menu-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+  .menu-tab{
+    background:var(--panel);border:1px solid var(--border);color:var(--muted);
+    padding:9px 16px;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;
+  }
+  .menu-tab.active{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);}
+
+  .dish-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:56px;}
+  @media (max-width:720px){.dish-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:460px){.dish-grid{grid-template-columns:1fr;}}
+  .dish-card{background:var(--panel);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+  .dish-art{
+    height:112px;display:flex;align-items:center;justify-content:center;
+    font-size:34px;
+  }
+  .dish-card .dish-body{padding:14px 16px 16px;}
+  .dish-card .dish-name{font-weight:700;font-size:14.5px;margin-bottom:4px;}
+  .dish-card .dish-desc{color:var(--muted);font-size:12px;line-height:1.7;margin-bottom:10px;}
+  .dish-card .dish-price{font-family:'IBM Plex Mono',monospace;color:var(--accent);font-size:13px;font-weight:700;}
+
+  /* seats */
+  .seats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:56px;}
+  @media (max-width:640px){.seats{grid-template-columns:1fr;}}
+  .seat-card{border-radius:16px;overflow:hidden;border:1px solid var(--border);}
+  .seat-art{height:150px;display:flex;align-items:center;justify-content:center;font-size:30px;}
+  .seat-card .seat-label{background:var(--panel);padding:12px 14px;font-size:13px;color:var(--muted);}
+  .seat-card .seat-label b{color:var(--text);display:block;margin-bottom:2px;font-size:14px;}
+
+  /* footer */
+  .foot{
+    display:grid;grid-template-columns:1.1fr .9fr;gap:28px;
+    border-top:1px solid var(--border);padding-top:36px;
+  }
+  @media (max-width:640px){.foot{grid-template-columns:1fr;}}
+  .foot h2{font-size:20px;font-weight:800;margin-bottom:16px;}
+  .info-line{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:13.5px;}
+  .info-line span:first-child{color:var(--muted-2);}
+  .info-line span:last-child{text-align:right;}
+  .map-art{
+    height:100%;min-height:180px;border-radius:16px;border:1px solid var(--border);
+    background:
+      linear-gradient(var(--panel-3) 1px,transparent 1px) 0 0/28px 28px,
+      linear-gradient(90deg,var(--panel-3) 1px,transparent 1px) 0 0/28px 28px,
+      var(--panel);
+    position:relative;
+  }
+  .map-pin{
+    position:absolute;left:52%;top:46%;
+    width:16px;height:16px;border-radius:50% 50% 50% 0;
+    background:var(--seal);transform:rotate(-45deg);
+    box-shadow:0 0 0 5px rgba(184,64,42,.18);
+  }
+  .disclaimer{text-align:center;color:var(--muted-2);font-size:11px;margin-top:40px;line-height:1.7;}
+</style>
+</head>
+<body>
+<div style="max-width:1040px;margin:14px auto 0;padding-inline:0;"><a href="../index.html" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:inherit;text-decoration:none;opacity:.8;">&larr; トップに戻る</a></div>
+<div class="tag"><span class="dot"></span><span><b>制作サンプル</b> — 飲食店（居酒屋・和食バル）様向けホームページ</span></div>
+
+<div class="wrap">
+
+  <section class="hero">
+    <div class="kicker">おでん・炙り・日本酒　夜のひととき</div>
+    <h1 class="mincho">今日は、<em>あかり</em>の下で一杯。</h1>
+    <p class="lead">創作おでんと厳選日本酒の店「灯屋（あかりや）」。カウンター8席・個室2室。仕事帰りにふらりと、一人でも、大切な人とでも。</p>
+    <div class="hero-row">
+      <a class="cta" href="#reserve">席を予約する →</a>
+      <div class="hours-pill">本日の営業　<span class="mono">17:00–24:00</span>（L.O. 23:00）</div>
+    </div>
+  </section>
+
+  <section class="concept">
+    <div class="concept-card">
+      <div class="num">01</div>
+      <h3 class="mincho">出汁からつくるおでん</h3>
+      <p>利尻昆布と本枯節を毎朝引く出汁。季節の種を10種以上、その日の仕入れで。</p>
+    </div>
+    <div class="concept-card">
+      <div class="num">02</div>
+      <h3 class="mincho">全国から集めた日本酒</h3>
+      <p>蔵元直送を中心に、常時18種。飲み比べセットは3種990円から。</p>
+    </div>
+    <div class="concept-card">
+      <div class="num">03</div>
+      <h3 class="mincho">一人でも心地よい距離感</h3>
+      <p>カウンター席は奥行きを広めに。店主との会話も、静かな一杯も、どちらも。</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2 class="mincho">本日のおすすめ</h2>
+      <div class="note">仕入れにより内容は変わります</div>
+    </div>
+    <div class="menu-tabs" id="menu-tabs"></div>
+    <div class="dish-grid" id="dish-grid"></div>
+  </section>
+
+  <section>
+    <div class="section-head"><h2 class="mincho">席・空間</h2></div>
+    <div class="seats">
+      <div class="seat-card">
+        <div class="seat-art" style="background:linear-gradient(160deg,#3a2c19,#2b2015);">🏮</div>
+        <div class="seat-label"><b>カウンター</b>8席・おまかせで会話も肴も</div>
+      </div>
+      <div class="seat-card">
+        <div class="seat-art" style="background:linear-gradient(160deg,#332a20,#231c14);">🍶</div>
+        <div class="seat-label"><b>個室（4名〜6名）</b>2室・接待や女子会にも</div>
+      </div>
+      <div class="seat-card">
+        <div class="seat-art" style="background:linear-gradient(160deg,#2e241a,#211a12);">🍢</div>
+        <div class="seat-label"><b>おでん鍋前</b>2席・湯気の香りをそのままに</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="reserve" class="foot">
+    <div>
+      <h2 class="mincho">アクセス・ご予約</h2>
+      <div class="info-line"><span>住所</span><span>東京都架空区灯町3-4-1 灯ビル1F</span></div>
+      <div class="info-line"><span>最寄駅</span><span>架空線「灯町」駅 徒歩3分</span></div>
+      <div class="info-line"><span>電話</span><span class="mono">03-0000-1234</span></div>
+      <div class="info-line"><span>定休日</span><span>日曜・祝日</span></div>
+      <div class="info-line" style="border-bottom:none;"><span>予約</span><span>電話・下記フォームより</span></div>
+      <a class="cta" style="margin-top:18px;" href="#">電話で予約する →</a>
+    </div>
+    <div class="map-art"><div class="map-pin"></div></div>
+  </section>
+
+  <p class="disclaimer">※このページはホームページ制作のポートフォリオ用デモです。店名・住所・メニュー等はすべて架空のものです。</p>
+</div>
+<script>
+(function(){
+  var MENUS = {
+    'おでん': [
+      {icon:'🍢', name:'大根', desc:'出汁を一晩含ませた看板の一品', price:'¥180'},
+      {icon:'🥚', name:'味玉', desc:'半熟のまま出汁に半日浸けて', price:'¥160'},
+      {icon:'🐟', name:'ふわり巾着', desc:'白身魚のすり身と餅入り', price:'¥260'}
+    ],
+    '炙り・焼き物': [
+      {icon:'🔥', name:'炙り〆鯖', desc:'藁の香りをまとわせた自家〆', price:'¥680'},
+      {icon:'🍗', name:'塩麹の焼き鳥盛', desc:'もも・つくね・ねぎまの3本', price:'¥520'},
+      {icon:'🍆', name:'焼き茄子の生姜だれ', desc:'皮ごと直火でじっくりと', price:'¥420'}
+    ],
+    '日本酒': [
+      {icon:'🍶', name:'飲み比べ3種', desc:'季節替わり・利き酒紙付き', price:'¥990'},
+      {icon:'🥃', name:'燗酒セレクト', desc:'温度は5段階からお選びを', price:'¥780〜'},
+      {icon:'🍾', name:'蔵元限定酒', desc:'月替わりで入荷、数量限定', price:'¥1,200〜'}
+    ]
+  };
+  var tabsEl = document.getElementById('menu-tabs');
+  var gridEl = document.getElementById('dish-grid');
+  var bgs = ['linear-gradient(160deg,#3a2c19,#2b2015)','linear-gradient(160deg,#332a20,#231c14)','linear-gradient(160deg,#2e241a,#211a12)'];
+  var keys = Object.keys(MENUS);
+
+  function render(active){
+    tabsEl.innerHTML='';
+    keys.forEach(function(k){
+      var b=document.createElement('button');
+      b.className='menu-tab'+(k===active?' active':'');
+      b.textContent=k;
+      b.addEventListener('click',function(){render(k);});
+      tabsEl.appendChild(b);
+    });
+    gridEl.innerHTML='';
+    MENUS[active].forEach(function(d,i){
+      var c=document.createElement('div');
+      c.className='dish-card';
+      c.innerHTML='<div class="dish-art" style="background:'+bgs[i%bgs.length]+'">'+d.icon+'</div>'+
+        '<div class="dish-body"><div class="dish-name">'+d.name+'</div>'+
+        '<div class="dish-desc">'+d.desc+'</div>'+
+        '<div class="dish-price">'+d.price+'</div></div>';
+      gridEl.appendChild(c);
+    });
+  }
+  render(keys[0]);
+})();
+</script>
+</body>
+</html>

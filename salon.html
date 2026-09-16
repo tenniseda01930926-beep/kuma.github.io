@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>美容室 凪 nagi</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@600&family=Noto+Sans+JP:wght@300;400;500;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root{
+    --bg:#faf6f1;
+    --panel:#ffffff;
+    --panel-2:#f3ece2;
+    --border:#e6dccb;
+    --text:#2b241d;
+    --muted:#8a7c68;
+    --muted-2:#a89a84;
+    --accent:#b3765a;
+    --accent-ink:#fff9f4;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#1c1712;
+      --panel:#252019;
+      --panel-2:#2c261e;
+      --border:#3a3226;
+      --text:#f3ece2;
+      --muted:#b0a28c;
+      --muted-2:#8a7c68;
+      --accent:#cf9a7c;
+      --accent-ink:#241a12;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#1c1712;
+    --panel:#252019;
+    --panel-2:#2c261e;
+    --border:#3a3226;
+    --text:#f3ece2;
+    --muted:#b0a28c;
+    --muted-2:#8a7c68;
+    --accent:#cf9a7c;
+    --accent-ink:#241a12;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg);color:var(--text);
+    font-family:'Noto Sans JP','Hiragino Kaku Gothic ProN',sans-serif;
+    font-weight:300;
+    padding-inline:18px;
+  }
+  .mincho{font-family:'Zen Old Mincho',serif;font-weight:600;}
+  h1,h2,h3{text-wrap:balance;margin:0;}
+  a{color:inherit;text-decoration:none;}
+
+  .tag{max-width:900px;margin:20px auto 0;display:flex;align-items:center;gap:10px;color:var(--muted-2);font-size:12px;letter-spacing:.06em;padding-bottom:14px;border-bottom:1px dashed var(--border);}
+  .tag .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none;}
+  .tag b{color:var(--text);}
+
+  .wrap{max-width:900px;margin-inline:auto;padding-block:52px 60px;}
+
+  .hero{text-align:center;padding-block:30px 54px;}
+  .hero .en{font-size:11px;letter-spacing:.42em;color:var(--accent);font-weight:600;margin-bottom:18px;}
+  .hero h1{font-size:clamp(30px,6vw,46px);line-height:1.7;}
+  .hero p{color:var(--muted);font-size:14px;margin-top:18px;max-width:40ch;margin-inline:auto;line-height:2;}
+  .hero-cta{display:inline-flex;margin-top:26px;gap:10px;align-items:center;background:var(--accent);color:var(--accent-ink);padding:13px 26px;border-radius:999px;font-size:13px;letter-spacing:.08em;font-weight:600;}
+
+  .divider{width:1px;height:44px;background:var(--border);margin:0 auto 44px;}
+
+  .section-head{text-align:center;margin-bottom:30px;}
+  .section-head .en{font-size:10px;letter-spacing:.3em;color:var(--muted-2);}
+  .section-head h2{font-size:22px;margin-top:8px;}
+
+  /* stylists */
+  .stylists{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:64px;}
+  @media (max-width:680px){.stylists{grid-template-columns:1fr;max-width:340px;margin-inline:auto;}}
+  .stylist{background:var(--panel);border:1px solid var(--border);border-radius:20px;overflow:hidden;text-align:center;}
+  .stylist-art{height:150px;display:flex;align-items:center;justify-content:center;font-size:34px;}
+  .stylist-body{padding:16px 14px 20px;}
+  .stylist-body .role{font-size:10px;letter-spacing:.14em;color:var(--accent);font-weight:700;margin-bottom:6px;}
+  .stylist-body h3{font-size:16px;margin-bottom:8px;}
+  .stylist-body p{color:var(--muted);font-size:12px;line-height:1.8;margin:0;}
+
+  /* menu */
+  .menu-list{max-width:640px;margin:0 auto 64px;}
+  .menu-row{display:flex;justify-content:space-between;gap:16px;padding:16px 4px;border-bottom:1px solid var(--border);align-items:baseline;}
+  .menu-row .name{font-size:14.5px;}
+  .menu-row .desc{color:var(--muted);font-size:11.5px;display:block;margin-top:4px;}
+  .menu-row .price{font-family:'IBM Plex Mono',monospace;font-size:13.5px;white-space:nowrap;color:var(--accent);font-weight:600;}
+
+  /* gallery */
+  .gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:64px;}
+  @media (max-width:640px){.gallery{grid-template-columns:repeat(2,1fr);}}
+  .gallery-tile{aspect-ratio:1;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;}
+
+  /* voice */
+  .voice-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:64px;}
+  @media (max-width:680px){.voice-wrap{grid-template-columns:1fr;}}
+  .voice{background:var(--panel-2);border-radius:16px;padding:20px;font-size:13px;color:var(--muted);line-height:1.9;position:relative;}
+  .voice .stars{color:var(--accent);font-size:12px;margin-bottom:10px;letter-spacing:2px;}
+  .voice .who{margin-top:12px;font-size:11px;color:var(--muted-2);}
+
+  /* footer */
+  .foot{border-top:1px solid var(--border);padding-top:36px;display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+  @media (max-width:600px){.foot{grid-template-columns:1fr;}}
+  .info-line{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px;}
+  .info-line span:first-child{color:var(--muted-2);}
+  .info-line span:last-child{text-align:right;}
+  .map-art{border-radius:16px;border:1px solid var(--border);min-height:150px;background:
+    linear-gradient(var(--panel-2) 1px,transparent 1px) 0 0/26px 26px,
+    linear-gradient(90deg,var(--panel-2) 1px,transparent 1px) 0 0/26px 26px,var(--panel);position:relative;}
+  .map-pin{position:absolute;left:56%;top:42%;width:14px;height:14px;border-radius:50% 50% 50% 0;background:var(--accent);transform:rotate(-45deg);}
+
+  .disclaimer{text-align:center;color:var(--muted-2);font-size:11px;margin-top:40px;line-height:1.7;}
+</style>
+</head>
+<body>
+<div style="max-width:1040px;margin:14px auto 0;padding-inline:0;"><a href="../index.html" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:inherit;text-decoration:none;opacity:.8;">&larr; トップに戻る</a></div>
+<div class="tag"><span class="dot"></span><span><b>制作サンプル</b> — 美容室・サロン様向けホームページ</span></div>
+
+<div class="wrap">
+
+  <section class="hero">
+    <div class="en">HAIR ATELIER</div>
+    <h1 class="mincho">静けさの中で、<br>似合うを見つける。</h1>
+    <p>完全予約制、1日6組限定の美容室「凪（なぎ）」。丁寧なカウンセリングから、髪だけでなく心もほどける時間を。</p>
+    <a class="hero-cta" href="#reserve">ご予約はこちら →</a>
+  </section>
+
+  <div class="divider"></div>
+
+  <section>
+    <div class="section-head"><div class="en">STYLIST</div><h2 class="mincho">担当スタイリスト</h2></div>
+    <div class="stylists">
+      <div class="stylist">
+        <div class="stylist-art" style="background:linear-gradient(160deg,#e7d5c4,#d8bfa6);">🌿</div>
+        <div class="stylist-body"><div class="role">店主・スタイリスト</div><h3>大場 直子</h3><p>骨格に沿った似合わせカットが得意。ナチュラルなくせ毛デザインも多数。</p></div>
+      </div>
+      <div class="stylist">
+        <div class="stylist-art" style="background:linear-gradient(160deg,#e3d8c9,#cdb79a);">🍃</div>
+        <div class="stylist-body"><div class="role">カラーリスト</div><h3>岸本 陽</h3><p>低ダメージ処方のカラーが専門。グレイカラーのご相談も歓迎です。</p></div>
+      </div>
+      <div class="stylist">
+        <div class="stylist-art" style="background:linear-gradient(160deg,#ddd0bc,#c3a988);">🕊️</div>
+        <div class="stylist-body"><div class="role">アシスタント</div><h3>宮下 澪</h3><p>丁寧なシャンプーとヘッドスパで、施術前後の時間を心地よく。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><div class="en">MENU</div><h2 class="mincho">メニュー・料金</h2></div>
+    <div class="menu-list">
+      <div class="menu-row"><div><span class="name">カット</span><span class="desc">カウンセリング・シャンプー込み</span></div><div class="price">¥7,700</div></div>
+      <div class="menu-row"><div><span class="name">カット＋カラー</span><span class="desc">単色・グラデーションどちらも同料金</span></div><div class="price">¥14,300</div></div>
+      <div class="menu-row"><div><span class="name">カット＋パーマ</span><span class="desc">デジタルパーマは+¥3,300</span></div><div class="price">¥15,400</div></div>
+      <div class="menu-row"><div><span class="name">ヘッドスパ（単品可）</span><span class="desc">40分・アロマオイル使用</span></div><div class="price">¥6,600</div></div>
+      <div class="menu-row"><div><span class="name">トリートメント</span><span class="desc">髪質に合わせて3種から選択</span></div><div class="price">¥4,400〜</div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><div class="en">GALLERY</div><h2 class="mincho">スタイル例</h2></div>
+    <div class="gallery" id="gallery"></div>
+  </section>
+
+  <section>
+    <div class="section-head"><div class="en">VOICE</div><h2 class="mincho">お客様の声</h2></div>
+    <div class="voice-wrap">
+      <div class="voice"><div class="stars">★★★★★</div>「希望をちゃんと聞いた上で、似合う長さを提案してくれました」<div class="who">30代・会社員</div></div>
+      <div class="voice"><div class="stars">★★★★★</div>「くせ毛で悩んでいましたが、扱いやすい髪型に。持ちも良いです」<div class="who">20代・学生</div></div>
+      <div class="voice"><div class="stars">★★★★★</div>「完全予約制で待ち時間がなく、ゆったり過ごせました」<div class="who">40代・自営業</div></div>
+    </div>
+  </section>
+
+  <section id="reserve" class="foot">
+    <div>
+      <h2 class="mincho" style="margin-bottom:16px;">アクセス・ご予約</h2>
+      <div class="info-line"><span>住所</span><span>東京都架空区凪浜2-7-3</span></div>
+      <div class="info-line"><span>最寄駅</span><span>架空線「凪浜」駅 徒歩5分</span></div>
+      <div class="info-line"><span>営業時間</span><span>10:00–19:00（最終受付17:30）</span></div>
+      <div class="info-line" style="border-bottom:none;"><span>定休日</span><span>火曜・第3水曜</span></div>
+    </div>
+    <div class="map-art"><div class="map-pin"></div></div>
+  </section>
+
+  <p class="disclaimer">※このページはホームページ制作のポートフォリオ用デモです。店名・スタッフ名・料金等はすべて架空のものです。</p>
+</div>
+<script>
+(function(){
+  var tones = [
+    'linear-gradient(160deg,#e7d5c4,#cdb79a)','linear-gradient(160deg,#ddd0bc,#c3a988)',
+    'linear-gradient(160deg,#e3d8c9,#d0bda2)','linear-gradient(160deg,#d8c7ad,#b89e7c)',
+    'linear-gradient(160deg,#ece1d2,#d6c4a8)','linear-gradient(160deg,#d3bfa2,#b7986f)',
+    'linear-gradient(160deg,#e7d5c4,#cdb79a)','linear-gradient(160deg,#ddd0bc,#c3a988)'
+  ];
+  var icons = ['✂️','💇‍♀️','🌾','✨','🍂','🎀','🌊','🕊️'];
+  var g = document.getElementById('gallery');
+  tones.forEach(function(bg,i){
+    var d = document.createElement('div');
+    d.className='gallery-tile';
+    d.style.background=bg;
+    d.textContent=icons[i%icons.length];
+    g.appendChild(d);
+  });
+})();
+</script>
+</body>
+</html>

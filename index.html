@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>えだ制作室</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@700;900&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --bg:#0e0f11;
+    --panel:#17191b;
+    --panel-2:#1e2123;
+    --panel-3:#262a2c;
+    --border:#2c3133;
+    --text:#eef0ee;
+    --muted:#9aa3a8;
+    --muted-2:#6a7377;
+    --accent:#e2762c;
+    --accent-ink:#1c0f04;
+    --accent-soft:#3a2b1c;
+    --ok:#5fb896;
+  }
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg);color:var(--text);
+    font-family:'Noto Sans JP','Hiragino Kaku Gothic ProN',sans-serif;
+    padding-inline:18px;
+  }
+  .disp{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;}
+  .mono{font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;}
+  h1,h2,h3{text-wrap:balance;margin:0;}
+  a{color:inherit;}
+  p{margin:0;}
+
+  .wrap{max-width:1040px;margin-inline:auto;}
+
+  /* nav */
+  .nav{
+    display:flex;justify-content:space-between;align-items:center;
+    padding-block:22px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:900;letter-spacing:.02em;}
+  .brand .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);}
+  .nav-cta{
+    background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:12.5px;
+    padding:10px 18px;border-radius:8px;text-decoration:none;
+  }
+
+  /* hero */
+  .hero{
+    display:grid;grid-template-columns:1.1fr .9fr;gap:36px;
+    padding-block:36px 64px;align-items:center;
+    border-bottom:1px solid var(--border);
+  }
+  @media (max-width:760px){.hero{grid-template-columns:1fr;}}
+  .hero .kicker{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12px;color:var(--accent);font-weight:700;letter-spacing:.04em;
+    background:var(--accent-soft);padding:7px 14px;border-radius:999px;margin-bottom:18px;
+  }
+  .hero h1{font-size:clamp(28px,5vw,42px);line-height:1.5;}
+  .hero h1 span{color:var(--accent);}
+  .hero p.lead{color:var(--muted);font-size:14.5px;line-height:1.9;margin-top:18px;max-width:48ch;}
+  .hero-row{display:flex;gap:10px;margin-top:26px;flex-wrap:wrap;}
+  .btn-primary{background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:13.5px;padding:13px 22px;border-radius:9px;text-decoration:none;}
+  .btn-outline{border:1px solid var(--border);font-weight:700;font-size:13.5px;padding:13px 22px;border-radius:9px;color:var(--text);text-decoration:none;}
+
+  .term{
+    background:var(--panel);border:1px solid var(--border);border-radius:14px;
+    overflow:hidden;
+  }
+  .term-bar{display:flex;gap:6px;padding:12px 14px;border-bottom:1px solid var(--border);}
+  .term-bar span{width:9px;height:9px;border-radius:50%;background:var(--panel-3);}
+  .term-body{padding:16px 18px 20px;font-size:12.5px;line-height:2;}
+  .term-body .p{color:var(--muted-2);}
+  .term-body .cmd{color:var(--text);}
+  .term-body .out{color:var(--ok);}
+  .term-body .path{color:var(--accent);}
+
+  /* section shared */
+  .section{padding-block:56px;border-bottom:1px solid var(--border);}
+  .section-head{margin-bottom:26px;}
+  .section-head .en{font-size:11px;letter-spacing:.22em;color:var(--accent);font-weight:700;}
+  .section-head h2{font-size:23px;margin-top:8px;}
+  .section-head p{color:var(--muted);font-size:13px;margin-top:10px;max-width:56ch;line-height:1.8;}
+
+  /* work grid */
+  .work-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+  @media (max-width:680px){.work-grid{grid-template-columns:1fr;}}
+  .work-card{
+    display:block;text-decoration:none;
+    background:var(--panel);border:1px solid var(--border);border-radius:16px;
+    overflow:hidden;transition:border-color .12s ease;
+  }
+  .work-card:hover{border-color:var(--accent);}
+  .work-art{height:120px;display:flex;align-items:center;justify-content:center;font-size:34px;}
+  .work-body{padding:16px 18px 18px;}
+  .work-tag{font-size:10.5px;color:var(--accent);font-weight:700;letter-spacing:.06em;margin-bottom:8px;}
+  .work-body h3{font-size:15.5px;margin-bottom:6px;}
+  .work-body p{color:var(--muted);font-size:12.5px;line-height:1.7;}
+  .work-link{display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-size:12px;color:var(--text);font-weight:700;}
+
+  /* reasons */
+  .reasons{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  @media (max-width:680px){.reasons{grid-template-columns:1fr;}}
+  .reason-card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:22px 20px;}
+  .reason-card .num{font-size:12px;color:var(--accent);}
+  .reason-card h3{font-size:16px;margin:12px 0 8px;}
+  .reason-card p{color:var(--muted);font-size:12.5px;line-height:1.8;}
+
+  /* pricing */
+  .price-note{color:var(--muted-2);font-size:11.5px;margin-bottom:20px;}
+  .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  @media (max-width:760px){.plans{grid-template-columns:1fr;}}
+  .plan{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:24px 20px;display:flex;flex-direction:column;}
+  .plan.featured{border-color:var(--accent);background:var(--panel-2);}
+  .plan .name{font-size:12px;color:var(--muted);letter-spacing:.06em;margin-bottom:10px;}
+  .plan .price{font-size:26px;font-weight:900;font-family:'JetBrains Mono',monospace;margin-bottom:4px;}
+  .plan .price small{font-size:12px;color:var(--muted);font-weight:500;}
+  .plan .desc{color:var(--muted);font-size:12px;margin-bottom:16px;}
+  .plan ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;flex:1;}
+  .plan li{font-size:12.5px;color:var(--text);display:flex;gap:8px;align-items:flex-start;}
+  .plan li::before{content:'✓';color:var(--ok);flex:none;font-weight:700;}
+
+  /* flow */
+  .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
+  @media (max-width:820px){.flow{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:460px){.flow{grid-template-columns:1fr;}}
+  .flow-step{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px 16px;}
+  .flow-step .n{font-family:'JetBrains Mono',monospace;color:var(--accent);font-size:12px;}
+  .flow-step h3{font-size:13.5px;margin:8px 0 6px;}
+  .flow-step p{font-size:11.5px;color:var(--muted);line-height:1.7;}
+
+  /* faq */
+  .faq{max-width:780px;}
+  .faq-item{border-bottom:1px solid var(--border);}
+  .faq-q{width:100%;text-align:left;background:none;border:none;padding:16px 2px;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:700;cursor:pointer;color:var(--text);font-family:inherit;}
+  .faq-q .plus{color:var(--accent);font-size:18px;font-weight:400;transition:transform .15s ease;flex:none;margin-left:12px;}
+  .faq-item.open .plus{transform:rotate(45deg);}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .2s ease;}
+  .faq-item.open .faq-a{max-height:200px;}
+  .faq-a p{font-size:12.5px;color:var(--muted);line-height:1.9;padding:0 2px 16px;}
+
+  /* contact / footer */
+  .foot{padding-block:56px 40px;}
+  .contact-panel{
+    background:var(--panel);border:1px solid var(--border);border-radius:18px;
+    padding:28px;display:grid;grid-template-columns:1.1fr .9fr;gap:24px;
+  }
+  @media (max-width:680px){.contact-panel{grid-template-columns:1fr;}}
+  .contact-panel h2{font-size:20px;margin-bottom:12px;}
+  .contact-panel p{color:var(--muted);font-size:13px;line-height:1.8;margin-bottom:16px;}
+  .channel-row{display:flex;gap:8px;flex-wrap:wrap;}
+  .channel{background:var(--panel-3);border:1px solid var(--border);border-radius:999px;padding:8px 14px;font-size:11.5px;color:var(--muted);}
+  .info-line{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:12.5px;}
+  .info-line span:first-child{color:var(--muted-2);}
+  .info-line span:last-child{text-align:right;}
+
+  .disclaimer{text-align:center;color:var(--muted-2);font-size:11px;margin-top:28px;line-height:1.8;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="nav">
+    <div class="brand"><span class="dot"></span>えだ制作室</div>
+    <a class="nav-cta" href="#contact">無料相談する</a>
+  </div>
+
+  <section class="hero">
+    <div>
+      <div class="kicker">● AI開発ツール活用でスピード制作</div>
+      <h1 class="disp">小さなお店・事務所の<br>ホームページを、<span>速く・手頃に。</span></h1>
+      <p class="lead">飲食店、美容室、士業、工場の業務アプリまで。ヒアリングからデザイン・公開まで、最短2週間で仕上げます。まずは無料相談で、やりたいことをお聞かせください。</p>
+      <div class="hero-row">
+        <a class="btn-primary" href="#contact">無料相談を申し込む →</a>
+        <a class="btn-outline" href="#works">制作サンプルを見る</a>
+      </div>
+    </div>
+    <div class="term">
+      <div class="term-bar"><span></span><span></span><span></span></div>
+      <div class="term-body mono">
+        <div class="p">$ <span class="cmd">build --site 美容室様向け</span></div>
+        <div class="out">✓ ヒアリング内容を反映しました</div>
+        <div class="out">✓ デザイン案 3パターン生成</div>
+        <div class="out">✓ レスポンシブ対応 完了</div>
+        <div class="p">$ <span class="cmd">deploy --to レンタルサーバー</span></div>
+        <div class="out">✓ 公開完了 <span class="path">https://your-shop.example.com</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="works">
+    <div class="section-head">
+      <div class="en">WORKS</div>
+      <h2 class="disp">制作サンプル</h2>
+      <p>業種ごとに実際のページを操作しながらご覧いただけます。同じような業種・目的のサイトも、内容に合わせて一から制作します。</p>
+    </div>
+    <div class="work-grid">
+      <a class="work-card" href="works/factory.html">
+        <div class="work-art" style="background:linear-gradient(160deg,#26303f,#1c2430);">🏭</div>
+        <div class="work-body">
+          <div class="work-tag">製造業・工場</div>
+          <h3>製造ライン切替チェックシートアプリ</h3>
+          <p>品種選択→チェック項目表示→班別進捗管理まで、実際に操作できる業務アプリのデモです。</p>
+          <div class="work-link">サンプルを開く →</div>
+        </div>
+      </a>
+      <a class="work-card" href="works/restaurant.html">
+        <div class="work-art" style="background:linear-gradient(160deg,#2b2219,#1f1912);">🏮</div>
+        <div class="work-body">
+          <div class="work-tag">飲食店</div>
+          <h3>居酒屋・和食バルのホームページ</h3>
+          <p>お店の世界観を伝える写真イメージとメニュー紹介、予約導線を備えたLPタイプの構成です。</p>
+          <div class="work-link">サンプルを開く →</div>
+        </div>
+      </a>
+      <a class="work-card" href="works/salon.html">
+        <div class="work-art" style="background:linear-gradient(160deg,#e7d5c4,#cdb79a);">✂️</div>
+        <div class="work-body">
+          <div class="work-tag">美容室・サロン</div>
+          <h3>完全予約制サロンのホームページ</h3>
+          <p>スタイリスト紹介・料金表・ギャラリーを備えた、落ち着いた雰囲気のサロンサイトです。</p>
+          <div class="work-link">サンプルを開く →</div>
+        </div>
+      </a>
+      <a class="work-card" href="works/accounting.html">
+        <div class="work-art" style="background:linear-gradient(160deg,#1c2731,#161f28);">📊</div>
+        <div class="work-body">
+          <div class="work-tag">士業・専門事務所</div>
+          <h3>会計事務所のコーポレートサイト</h3>
+          <p>実績数値・サービス一覧・FAQを備えた、信頼感を重視した士業向け構成です。</p>
+          <div class="work-link">サンプルを開く →</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div class="en">WHY US</div>
+      <h2 class="disp">選ばれる理由</h2>
+    </div>
+    <div class="reasons">
+      <div class="reason-card"><div class="num mono">01</div><h3>制作スピード</h3><p>AI開発ツールを活用し、デザイン案の作成からコーディングまでを効率化。最短2週間での公開が可能です。</p></div>
+      <div class="reason-card"><div class="num mono">02</div><h3>手頃な料金</h3><p>制作会社に依頼するより低コストで、店舗・事務所単位のホームページをご用意できます。</p></div>
+      <div class="reason-card"><div class="num mono">03</div><h3>業務アプリにも対応</h3><p>ホームページだけでなく、現場のチェックシートや簡易管理アプリなど、業務効率化の相談も可能です。</p></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div class="en">PRICING</div>
+      <h2 class="disp">料金プラン</h2>
+    </div>
+    <p class="price-note">※内容により変動します。まずは無料相談でお見積りいたします（下記はサンプル価格です）</p>
+    <div class="plans">
+      <div class="plan">
+        <div class="name">ライトプラン</div>
+        <div class="price mono">¥55,000<small>〜</small></div>
+        <div class="desc">1ページ完結のシンプルなホームページ</div>
+        <ul><li>トップページ1枚構成</li><li>スマホ対応</li><li>お問い合わせ導線</li></ul>
+      </div>
+      <div class="plan featured">
+        <div class="name">スタンダードプラン</div>
+        <div class="price mono">¥120,000<small>〜</small></div>
+        <div class="desc">複数ページ構成、最も選ばれているプラン</div>
+        <ul><li>3〜5ページ構成</li><li>メニュー・料金表など</li><li>Googleマップ埋め込み</li><li>公開後1ヶ月サポート</li></ul>
+      </div>
+      <div class="plan">
+        <div class="name">カスタムプラン</div>
+        <div class="price mono">個別見積</div>
+        <div class="desc">業務アプリなど、独自機能を含むご相談</div>
+        <ul><li>予約フォーム等の機能追加</li><li>業務アプリ・チェックシート開発</li><li>継続的な更新サポート</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div class="en">FLOW</div>
+      <h2 class="disp">制作の流れ</h2>
+    </div>
+    <div class="flow">
+      <div class="flow-step"><div class="n">01</div><h3>ヒアリング</h3><p>やりたいことや雰囲気をお聞きします</p></div>
+      <div class="flow-step"><div class="n">02</div><h3>デザイン提案</h3><p>サンプルをもとに方向性をご確認</p></div>
+      <div class="flow-step"><div class="n">03</div><h3>制作</h3><p>ご要望を反映しながら作成</p></div>
+      <div class="flow-step"><div class="n">04</div><h3>公開</h3><p>レンタルサーバーに設置して公開</p></div>
+      <div class="flow-step"><div class="n">05</div><h3>サポート</h3><p>公開後の修正・更新にも対応</p></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><div class="en">FAQ</div><h2 class="disp">よくあるご質問</h2></div>
+    <div class="faq" id="faq"></div>
+  </section>
+
+  <section class="foot" id="contact">
+    <div class="contact-panel">
+      <div>
+        <h2 class="disp">お問い合わせ</h2>
+        <p>ホームページ制作・業務アプリのご相談は、下記フォームまたは各プラットフォームからお気軽にどうぞ。まずは無料相談で内容をお伺いします。</p>
+        <div class="channel-row">
+          <span class="channel">クラウドワークス</span>
+          <span class="channel">ランサーズ</span>
+          <span class="channel">メールフォーム</span>
+        </div>
+      </div>
+      <div>
+        <div class="info-line"><span>対応エリア</span><span>全国（オンライン対応）</span></div>
+        <div class="info-line"><span>ご返信目安</span><span>1〜2営業日以内</span></div>
+        <div class="info-line" style="border-bottom:none;"><span>初回相談</span><span>無料</span></div>
+      </div>
+    </div>
+  </section>
+
+  <p class="disclaimer">※このページはホームページ制作サービスのポートフォリオトップページのサンプルです。屋号・料金・実績等はすべて仮のものです。各サンプルへのリンク先も同様にデモページです。</p>
+</div>
+<script>
+(function(){
+  var QA = [
+    {q:'ホームページ制作の実績がなくても相談できますか？', a:'もちろんです。どんな業種でも、まずは無料相談でご希望をお伺いします。'},
+    {q:'レンタルサーバーは自分で用意する必要がありますか？', a:'お持ちでない場合は、契約からドメイン取得まで一緒に進められます。'},
+    {q:'公開後に写真やメニューを自分で更新できますか？', a:'ご希望に応じて、簡単に更新できる仕組みをご用意することも可能です。'},
+    {q:'業務アプリ（チェックシート等）だけの依頼も可能ですか？', a:'可能です。ホームページとあわせて、現場で使う簡易アプリのご相談も承っています。'}
+  ];
+  var el = document.getElementById('faq');
+  QA.forEach(function(item){
+    var box = document.createElement('div');
+    box.className='faq-item';
+    box.innerHTML = '<button class="faq-q">'+item.q+'<span class="plus">+</span></button>'+
+                     '<div class="faq-a"><p>'+item.a+'</p></div>';
+    box.querySelector('.faq-q').addEventListener('click', function(){
+      box.classList.toggle('open');
+    });
+    el.appendChild(box);
+  });
+})();
+</script>
+</body>
+</html>

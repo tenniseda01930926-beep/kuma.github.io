@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>製造ライン切替チェック</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;700&display=swap">
+<style>
+  :root{
+    --bg:#141a22;
+    --panel:#1d2530;
+    --panel-2:#252f3c;
+    --panel-3:#2c3646;
+    --border:#374252;
+    --text:#eef2f6;
+    --muted:#8fa0b3;
+    --muted-2:#647285;
+    --accent:#ff8f3f;
+    --accent-dim:#7a4a26;
+    --accent-ink:#2b1503;
+    --ok:#4fd88f;
+    --ok-dim:#1c3a2c;
+    --warn:#f4c15c;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Zen Kaku Gothic New','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;
+    padding-inline:16px;
+    padding-block:20px;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .mono{font-family:'IBM Plex Mono','SFMono-Regular',monospace;font-variant-numeric:tabular-nums;}
+  h1,h2,h3{text-wrap:balance;margin:0;}
+  button{font:inherit;color:inherit;}
+
+  /* ---------- portfolio wrapper ---------- */
+  .frame{
+    max-width:720px;
+    margin-inline:auto;
+  }
+  .portfolio-tag{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:var(--muted);
+    font-size:12px;
+    letter-spacing:.08em;
+    margin-bottom:14px;
+    padding-bottom:14px;
+    border-bottom:1px dashed var(--border);
+  }
+  .portfolio-tag .dot{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--accent);
+    flex:none;
+  }
+  .portfolio-tag b{color:var(--text);font-weight:700;}
+
+  /* ---------- device shell ---------- */
+  .device{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 30px 60px -30px rgba(0,0,0,.6);
+  }
+  .statusbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 16px;
+    background:var(--panel-3);
+    font-size:11px;
+    color:var(--muted);
+    letter-spacing:.05em;
+  }
+  .statusbar .live{
+    display:flex;align-items:center;gap:6px;
+    color:var(--ok);
+  }
+  .live .blip{width:6px;height:6px;border-radius:50%;background:var(--ok);animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+  @media (prefers-reduced-motion:reduce){.live .blip{animation:none;}}
+
+  .appbar{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:16px;
+    background:var(--panel-2);
+    border-bottom:1px solid var(--border);
+  }
+  .appbar .eyebrow{
+    font-size:11px;
+    color:var(--accent);
+    letter-spacing:.14em;
+    font-weight:700;
+  }
+  .appbar h2{font-size:19px;font-weight:900;}
+  .backbtn{
+    width:38px;height:38px;flex:none;
+    border-radius:10px;
+    background:var(--panel-3);
+    border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;
+    font-size:18px;
+    cursor:pointer;
+  }
+  .backbtn:active{background:var(--accent-dim);}
+
+  .screen{padding:16px;min-height:440px;}
+  [hidden]{display:none!important;}
+
+  /* ---------- product grid ---------- */
+  .grid-note{color:var(--muted);font-size:13px;margin-bottom:14px;}
+  .product-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+  }
+  @media (max-width:420px){
+    .product-grid{grid-template-columns:1fr;}
+  }
+  .product-tile{
+    background:var(--panel-2);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:16px 14px;
+    text-align:left;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    min-height:104px;
+    cursor:pointer;
+    transition:transform .08s ease,border-color .08s ease;
+  }
+  .product-tile:active{transform:scale(.97);border-color:var(--accent);}
+  .product-tile .code{color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.06em;}
+  .product-tile .name{font-size:16px;font-weight:700;}
+  .product-tile .size{color:var(--muted);font-size:12px;}
+
+  /* ---------- checklist screen ---------- */
+  .progress-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:14px;
+  }
+  .progress-track{
+    flex:1;
+    height:8px;
+    border-radius:999px;
+    background:var(--panel-3);
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,var(--accent),var(--warn));
+    border-radius:999px;
+    transition:width .25s ease;
+  }
+  .progress-num{font-size:13px;color:var(--muted);flex:none;}
+
+  .team-tabs{
+    display:flex;
+    gap:6px;
+    margin-bottom:16px;
+  }
+  .team-tab{
+    flex:1;
+    padding:10px 0;
+    text-align:center;
+    border-radius:10px;
+    background:var(--panel-2);
+    border:1px solid var(--border);
+    font-weight:700;
+    font-size:13px;
+    color:var(--muted);
+    cursor:pointer;
+  }
+  .team-tab.active{
+    background:var(--accent-dim);
+    border-color:var(--accent);
+    color:var(--accent);
+  }
+
+  .phase{margin-bottom:18px;}
+  .phase-title{
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+    color:var(--muted);
+    font-size:12px;
+    letter-spacing:.1em;
+    font-weight:700;
+    margin-bottom:8px;
+  }
+  .phase-title .n{color:var(--accent);}
+
+  .check-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:13px 12px;
+    border-radius:12px;
+    background:var(--panel-2);
+    border:1px solid var(--border);
+    margin-bottom:8px;
+    cursor:pointer;
+    user-select:none;
+  }
+  .check-item.done{
+    background:var(--ok-dim);
+    border-color:var(--ok);
+  }
+  .box{
+    width:26px;height:26px;flex:none;
+    border-radius:7px;
+    border:2px solid var(--muted-2);
+    display:flex;align-items:center;justify-content:center;
+    font-size:15px;
+    color:transparent;
+  }
+  .check-item.done .box{
+    border-color:var(--ok);
+    background:var(--ok);
+    color:var(--panel);
+  }
+  .check-item .label{font-size:14px;flex:1;}
+  .check-item .label small{display:block;color:var(--muted);font-size:11px;margin-top:2px;}
+
+  .signoff{
+    margin-top:18px;
+    padding-top:16px;
+    border-top:1px solid var(--border);
+  }
+  .signoff label{
+    display:block;
+    font-size:11px;
+    color:var(--muted);
+    letter-spacing:.08em;
+    margin-bottom:6px;
+  }
+  .signoff input{
+    width:100%;
+    background:var(--panel-3);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:11px 12px;
+    color:var(--text);
+    font-size:14px;
+    margin-bottom:12px;
+  }
+  .signoff input:focus{outline:2px solid var(--accent);outline-offset:1px;}
+  .complete-btn{
+    width:100%;
+    padding:14px;
+    border-radius:12px;
+    border:none;
+    background:var(--accent);
+    color:var(--accent-ink);
+    font-weight:900;
+    font-size:15px;
+    letter-spacing:.03em;
+    cursor:pointer;
+  }
+  .complete-btn:disabled{
+    background:var(--panel-3);
+    color:var(--muted-2);
+    cursor:not-allowed;
+  }
+  .complete-note{
+    text-align:center;
+    font-size:12px;
+    color:var(--muted);
+    margin-top:10px;
+  }
+
+  .toast{
+    position:fixed;
+    left:50%;
+    bottom:calc(24px + env(safe-area-inset-bottom,0px));
+    transform:translate(-50%,10px);
+    background:var(--ok);
+    color:var(--panel);
+    font-weight:700;
+    font-size:13px;
+    padding:12px 20px;
+    border-radius:999px;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .2s ease,transform .2s ease;
+    box-shadow:0 10px 30px -10px rgba(0,0,0,.5);
+    z-index:20;
+  }
+  .toast.show{opacity:1;transform:translate(-50%,0);}
+
+  .disclaimer{
+    text-align:center;
+    color:var(--muted-2);
+    font-size:11px;
+    margin-top:16px;
+    line-height:1.6;
+  }
+</style>
+</head>
+<body>
+<div style="max-width:1040px;margin:14px auto 0;padding-inline:0;"><a href="../index.html" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:inherit;text-decoration:none;opacity:.8;">&larr; トップに戻る</a></div>
+<div class="frame">
+
+  <div class="portfolio-tag">
+    <span class="dot"></span>
+    <span><b>制作サンプル</b> — 工場・製造業向け業務アプリ／チェックシートアプリ</span>
+  </div>
+
+  <div class="device">
+    <div class="statusbar">
+      <span>ライン端末 #A-12</span>
+      <span class="live"><span class="blip"></span>接続中</span>
+    </div>
+
+    <!-- ===== HOME: 品種選択 ===== -->
+    <div id="screen-home" class="screen">
+      <div class="appbar" style="padding:0 0 16px 0;background:transparent;border:none;">
+        <div>
+          <div class="eyebrow">切替チェックシート</div>
+          <h2>品種を選択</h2>
+        </div>
+      </div>
+      <p class="grid-note">本日の生産予定から品種を選ぶと、その品種専用のチェック項目が自動で開きます。</p>
+      <div class="product-grid" id="product-grid"></div>
+    </div>
+
+    <!-- ===== CHECKLIST ===== -->
+    <div id="screen-check" class="screen" hidden>
+      <div class="appbar" style="margin:-16px -16px 16px -16px;">
+        <button class="backbtn" id="back-btn" aria-label="品種選択に戻る">←</button>
+        <div>
+          <div class="eyebrow" id="check-code">P-000</div>
+          <h2 id="check-name">品種名</h2>
+        </div>
+      </div>
+
+      <div class="progress-row">
+        <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+        <div class="progress-num mono" id="progress-num">0 / 0</div>
+      </div>
+
+      <div class="team-tabs" id="team-tabs"></div>
+
+      <div id="phase-list"></div>
+
+      <div class="signoff">
+        <label for="worker-name">実施者名</label>
+        <input id="worker-name" type="text" placeholder="氏名を入力" autocomplete="off">
+        <button class="complete-btn" id="complete-btn" disabled>この班の確認を完了する</button>
+        <p class="complete-note">全項目チェック後、氏名を入力すると完了できます</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="disclaimer">※このページはホームページ制作のポートフォリオ用デモです。表示されている品種・データはすべて架空のものです。</p>
+</div>
+
+<div class="toast" id="toast">B班の確認を保存しました</div>
+<script>
+(function(){
+  var PRODUCTS = [
+    {code:'P-101', name:'小袋 10g × 24', size:'袋幅 85mm'},
+    {code:'P-104', name:'小袋 15g × 20', size:'袋幅 95mm'},
+    {code:'P-205', name:'中袋 50g × 12', size:'袋幅 140mm'},
+    {code:'P-212', name:'中袋 65g × 12', size:'袋幅 150mm'},
+    {code:'P-330', name:'大袋 200g × 6', size:'袋幅 220mm'},
+    {code:'P-340', name:'大袋 300g × 6', size:'袋幅 240mm'}
+  ];
+
+  var PHASES = [
+    {title:'準備確認', items:[
+      {label:'ライン停止・安全確認', note:'非常停止スイッチの状態を確認'},
+      {label:'旧品種の残留物除去', note:'ホッパー・コンベア内を清掃'},
+      {label:'包材ロールの品番照合', note:'現品票とロット番号を確認'}
+    ]},
+    {title:'設定確認', items:[
+      {label:'シーラー温度設定', note:'品種別レシピ値と一致しているか'},
+      {label:'計量ユニット値', note:'風袋・目標重量を再設定'},
+      {label:'印字内容（賞味期限）', note:'年月日フォーマットを確認'},
+      {label:'袋サイズ・センサー位置', note:'ガイド幅を品種寸法に調整'}
+    ]},
+    {title:'試運転・最終確認', items:[
+      {label:'試運転サンプル抜取り', note:'3袋を抜取り、重量・シール強度を確認'},
+      {label:'表示ラベルの現品確認', note:'ラインサイネージの品種名を更新'},
+      {label:'管理者へ切替完了を口頭連絡', note:''}
+    ]}
+  ];
+
+  var TEAMS = ['A班','B班','C班','D班'];
+
+  var state = {
+    productIndex:null,
+    team:0,
+    checks:{} // key: team-phase-item -> bool
+  };
+
+  var grid = document.getElementById('product-grid');
+  PRODUCTS.forEach(function(p, i){
+    var el = document.createElement('button');
+    el.className = 'product-tile';
+    el.innerHTML = '<span class="code mono">'+p.code+'</span>'+
+                    '<span class="name">'+p.name+'</span>'+
+                    '<span class="size">'+p.size+'</span>';
+    el.addEventListener('click', function(){ openProduct(i); });
+    grid.appendChild(el);
+  });
+
+  var teamTabsEl = document.getElementById('team-tabs');
+  TEAMS.forEach(function(t, i){
+    var b = document.createElement('button');
+    b.className = 'team-tab';
+    b.textContent = t;
+    b.addEventListener('click', function(){ state.team = i; render(); });
+    teamTabsEl.appendChild(b);
+  });
+
+  document.getElementById('back-btn').addEventListener('click', function(){
+    document.getElementById('screen-check').hidden = true;
+    document.getElementById('screen-home').hidden = false;
+  });
+
+  var nameInput = document.getElementById('worker-name');
+  var completeBtn = document.getElementById('complete-btn');
+  nameInput.addEventListener('input', updateCompleteState);
+  completeBtn.addEventListener('click', function(){
+    if (completeBtn.disabled) return;
+    showToast(TEAMS[state.team] + 'の確認を保存しました（実施者: ' + nameInput.value.trim() + '）');
+    completeBtn.disabled = true;
+  });
+
+  function openProduct(i){
+    state.productIndex = i;
+    state.team = 0;
+    state.checks = {};
+    nameInput.value = '';
+    document.getElementById('screen-home').hidden = true;
+    document.getElementById('screen-check').hidden = false;
+    render();
+  }
+
+  function itemKey(pIdx, iIdx){
+    return state.team + '-' + pIdx + '-' + iIdx;
+  }
+
+  function render(){
+    var p = PRODUCTS[state.productIndex];
+    document.getElementById('check-code').textContent = p.code;
+    document.getElementById('check-name').textContent = p.name;
+
+    Array.prototype.forEach.call(teamTabsEl.children, function(el, i){
+      el.classList.toggle('active', i === state.team);
+    });
+
+    var listEl = document.getElementById('phase-list');
+    listEl.innerHTML = '';
+    var total = 0, doneCount = 0;
+
+    PHASES.forEach(function(phase, pIdx){
+      var phaseEl = document.createElement('div');
+      phaseEl.className = 'phase';
+      var titleEl = document.createElement('div');
+      titleEl.className = 'phase-title';
+      titleEl.innerHTML = '<span class="n mono">0'+(pIdx+1)+'</span><span>'+phase.title+'</span>';
+      phaseEl.appendChild(titleEl);
+
+      phase.items.forEach(function(item, iIdx){
+        total++;
+        var key = itemKey(pIdx, iIdx);
+        var checked = !!state.checks[key];
+        if (checked) doneCount++;
+
+        var row = document.createElement('div');
+        row.className = 'check-item' + (checked ? ' done' : '');
+        row.innerHTML = '<span class="box">'+(checked ? '✓' : '')+'</span>'+
+                         '<span class="label">'+item.label+(item.note ? '<small>'+item.note+'</small>' : '')+'</span>';
+        row.addEventListener('click', function(){
+          state.checks[key] = !state.checks[key];
+          render();
+        });
+        phaseEl.appendChild(row);
+      });
+
+      listEl.appendChild(phaseEl);
+    });
+
+    document.getElementById('progress-num').textContent = doneCount + ' / ' + total;
+    document.getElementById('progress-fill').style.width = (total ? (doneCount/total*100) : 0) + '%';
+
+    updateCompleteState();
+  }
+
+  function updateCompleteState(){
+    var p = PRODUCTS[state.productIndex];
+    if (!p) return;
+    var total = 0, doneCount = 0;
+    PHASES.forEach(function(phase, pIdx){
+      phase.items.forEach(function(item, iIdx){
+        total++;
+        if (state.checks[itemKey(pIdx, iIdx)]) doneCount++;
+      });
+    });
+    var allDone = total > 0 && doneCount === total;
+    var hasName = nameInput.value.trim().length > 0;
+    completeBtn.disabled = !(allDone && hasName);
+  }
+
+  var toastEl = document.getElementById('toast');
+  var toastTimer = null;
+  function showToast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toastEl.classList.remove('show'); }, 2400);
+  }
+})();
+</script>
+</body>
+</html>
